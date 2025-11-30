@@ -26,7 +26,7 @@
 - Операции сравнения
 
 **Грамматика G:**
-```
+
 <Program> ::= <StatementList>
 
 <StatementList> ::= <Statement> | <StatementList> <Statement>
@@ -42,7 +42,6 @@
 <Term> ::= <Factor> | <Term> * <Factor> | <Term> / <Factor>
 
 <Factor> ::= IntLiteral | ID | ( <Expression> ) | - <Factor>
-```
 
 **Терминалы:**
 - IntLiteral - целочисленные литералы: `123`, `-45`, `0`
