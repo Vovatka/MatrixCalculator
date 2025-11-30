@@ -70,35 +70,17 @@
     value = a * (b + 2);
     ```
 
-3.  Использование отрицательных чисел:
-
-    ```c
-    int temperature = -5;
-    delta = temperature - -10;
-    absolute = -temperature;
-    ```
-
-4.  Множественные операции:
+3.  Множественные операции:
 
     ```c
     int base = 100;
     int bonus = 25;
     int penalty = 10;
     total = base + bonus - penalty;
-    final = total / 5 * 2;
+    result = total / 5 * 2;
     ```
 
-5.  Сложные выражения со скобками:
-
-    ```c
-    int p = 8;
-    int q = 4;
-    int r = 2;
-    calculation = (p + q) * (r - 1) / 2;
-    nested = ((p * q) + (r - 1)) / 3;
-    ```
-
-6.  Последовательные вычисления:
+4.  Последовательные вычисления:
 
     ```c
     int start = 0;
@@ -106,37 +88,4 @@
     start = start * 10;
     start = start - 5;
     result = start / 2;
-    ```
-
-7.  Использование ранее объявленных переменных:
-
-    ```c
-    int width = 15;
-    int height = 25;
-    area = width * height;
-    perimeter = 2 * (width + height);
-    ```
-
-8.  Комбинированные операции:
-
-    ```c
-    int counter = 0;
-    counter = counter + 1;
-    step = 5;
-    counter = counter * step - 2;
-    final = (counter + 10) / 3;
-    ```
-
-9.  Минимальная программа:
-
-    ```c
-    x = 42;
-    ```
-
-10. Только объявления:
-
-    ```c
-    int first = 1;
-    int second = 2;
-    int third = 3;
     ```
