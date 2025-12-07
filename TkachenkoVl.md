@@ -203,15 +203,14 @@ int a = 10 ; b = a * 2 + 5 ;
 17. Factor -> "-" Factor
 ```
 
-**First таблица:**
-|Нетерминал   |FIRST        |
-|:-----------:|:-----------:|
-|S'           |{int, ID}    |
-|Program      |{int, ID}    |
-|StatementList|{int, ID}    |
-|Statement    |{int, ID}    |
-|Declaration  |{int}        |
-|Assignment   |{ID}         |
-|Expression   |{IntLiteral, ID, "(", "-"}|
-|Term         |{IntLiteral, ID, "(", "-"}|
-|Factor       |{IntLiteral, ID, "(", "-"}|
+|Нетерминал   |FIRST                     |FOLLOW
+|:-----------:|:------------------------:|:-----------------------:|
+|S'           |{int, ID}                 |{$}                      |
+|Program      |{int, ID}                 |{$}                      |
+|StatementList|{int, ID}                 |{$,"int",ID}             | 
+|Statement    |{int, ID}                 |{$,"int",ID}             |
+|Declaration  |{int}                     |{$,"int",ID}             | 
+|Assignment   |{ID}                      |{$,"int",ID}             |
+|Expression   |{IntLiteral, ID, "(", "-"}|{";","+","-",")"}        |
+|Term         |{IntLiteral, ID, "(", "-"}|{";","+","-","*","/",")"}|
+|Factor       |{IntLiteral, ID, "(", "-"}|{";","+","-","*","/",")"}|
