@@ -1,0 +1,178 @@
+***Автор: Ткаченко Владимир КМБО-05-23. Вариант 20-2-1***
+
+## Задание 1
+Разработать грамматику G по описанию (БНФ):
+
+Выражения из присваиваний переменных типа `int`. Пример: `a = 0`; `b = 1`; `a = a + b`;
+
+### Описане языка
+Язык описывает последовательность операций присваивания значений переменным 
+целочисленного типа.
+
+**В язык входит:**
+- Объявление и инициализация переменных типа `int`
+- Присваивание значений переменным
+- Арифметические операции: сложение `+`, вычитание `-`, умножение `*`, деление `/`
+- Использование скобок `()` для изменения приоритета операций
+- Использование ранее объявленных переменных в выражениях
+- Последовательное выполнение операторов (через точку с запятой `;`)
+
+**В язык не входит:**
+- Другие типы данных (кроме `int`)
+- Условные операторы (`if`, `else`)
+- Циклы (`for`, `while`)
+- Функции и процедуры
+- Логические операции
+- Операции сравнения
+
+**Грамматика G:**
+```ebnf
+<Program> ::= <StatementList>
+
+<StatementList> ::= <Statement> | <StatementList> <Statement>
+
+<Statement> ::= <Declaration> | <Assignment>
+
+<Declaration> ::= int ID = <Expression> ;
+
+<Assignment> ::= ID = <Expression> ;
+
+<Expression> ::= <Term> | <Expression> + <Term> | <Expression> - <Term>
+
+<Term> ::= <Factor> | <Term> * <Factor> | <Term> / <Factor>
+
+<Factor> ::= IntLiteral | ID | ( <Expression> ) | - <Factor>
+```
+
+**Терминалы:**
+- IntLiteral - целочисленные литералы: `123`, `-45`, `0`
+- ID - идентификаторы переменных: `a`, `b`, `counter`, `tmp`
+- Ключевые слова: `int`
+- Операторы: `+`, `-`, `*`, `/`, `=`
+- Разделители: `;`, `(`, `)`
+
+### Примеры:
+
+1.  Простые объявления и присваивания:
+
+    ```c
+    int x = 10;
+    int y = 20;
+    z = x + y;
+    ```
+
+2.  Арифметические операции с приоритетом:
+
+    ```c
+    int a = 5;
+    int b = 3;
+    result = a * b + 2;
+    value = a * (b + 2);
+    ```
+
+3.  Множественные операции:
+
+    ```c
+    int base = 100;
+    int bonus = 25;
+    int penalty = 10;
+    total = base + bonus - penalty;
+    result = total / 5 * 2;
+    ```
+
+4.  Последовательные вычисления:
+
+    ```c
+    int start = 0;
+    start = start + 1;
+    start = start * 10;
+    start = start - 5;
+    result = start / 2;
+    ```
+
+## Задание 2 - 4
+
+### Класс и однозначность языка и грамматики
+Поскольку в левой части продукции всегда стоит один нетерминал, а в правой – любое
+выражение, грамматика относится к классу *контекстно-свободных*. При этом грамматика
+не является регулярной.
+
+**Правила в грамматике G, нарушающие регулярность:**
+- Смешанный порядок терминалов и нетерминалов. Напимер для `<Assignment> ::= ID = <Expression> ;`
+Правая часть представляет собой терминал (ID) → терминал (=) → нетерминал (Expression) → терминал (;),
+что не укладывается в правила вида A → aB A → Ba.
+- Левая рекурсия:
+    ```
+    <Expression> ::= <Expression> + <Term>
+    <Term> ::= <Term> * <Factor>
+    ```
+    Левая рекурсия невозможна в регулярных грамматиках, т.к. она требует стека, и следовательно,
+    не может описана конечным автоматом.
+
+### Cинтаксическое дерево и вывод произвольного предложения
+Возьмём в качестве примера следующие предложение:
+```
+int a = 10;
+b = a * 2 + 5;
+```
+
+<Program> ->
+<StatementList> ->
+<StatementList><Statement> ->
+<Statement><Statement> ->
+<Declaration><Statement> ->
+int ID = <Expression> ; <Statement> ->
+int a = <Expression> ; <Statement> ->
+int a = <Term> ; <Statement> ->
+int a = <Factor> ; <Statement> ->
+int a = IntLiteral ; <Statement> ->
+int a = 10 ; <Statement> ->
+int a = 10 ; <Assignment> ->
+int a = 10 ; ID = <Expression> ; ->
+int a = 10 ; b = <Expression> ; ->
+int a = 10 ; b = <Expression> + <Term> ; ->
+int a = 10 ; b = <Term> + <Term> ; ->
+int a = 10 ; b = <Term> * <Factor> + <Term> ; ->
+int a = 10 ; b = <Factor> * <Factor> + <Term> ; ->
+int a = 10 ; b = ID * <Factor> + <Term> ; ->
+int a = 10 ; b = a * <Factor> + <Tearm> ; ->
+int a = 10 ; b = a * IntLiteral + <Term> ; ->
+int a = 10 ; b = a * 2 + <Term> ; ->
+int a = 10 ; b = a * 2 + <Factor> ; ->
+int a = 10 ; b = a * 2 + IntLiteral ; ->
+int a = 10 ; b = a * 2 + 5 ;
+
+**Cинтаксическое дерево:**
+```tree
+<Program>
+└── <StatementList>
+    ├── <StatementList>
+    │   └── <Statement>
+    │       └── <Declaration>
+    │           ├── int
+    │           ├── ID ("a")
+    │           ├── =
+    │           ├── <Expression>
+    │           │   └── <Term>
+    │           │       └── <Factor>
+    │           │           └── IntLiteral ("10")
+    │           └── ;
+    └── <Statement>
+        └── <Assignment>
+            ├── ID ("b")
+            ├── =
+            ├── <Expression>
+            │   ├── <Expression>
+            │   │   └── <Term>
+            │   │       ├── <Term>
+            │   │       │   └── <Factor>
+            │   │       │       └── ID ("a")
+            │   │       ├── *
+            │   │       └── <Factor>
+            │   │           └── IntLiteral ("2")
+            │   ├── +
+            │   └── <Term>
+            │       └── <Factor>
+            │           └── IntLiteral ("5")
+            └── ;
+```
