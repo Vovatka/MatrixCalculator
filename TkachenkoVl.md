@@ -110,32 +110,33 @@
     не может описана конечным автоматом.
 
 ### Cинтаксическое дерево и вывод произвольного предложения
-Возьмём в качестве примера следующие предложение:
+Возьмём в качестве примера следующее предложение:
 ```
 int a = 10;
 b = a * 2 + 5;
 ```
 
+**Полный разбор предложения:**
 ```ebnf
 <Program> ->
 <StatementList> ->
 <StatementList><Statement> ->
 <Statement><Statement> ->
 <Declaration><Statement> ->
-int ID = <Expression> ; <Statement> ->
+int ID ("a") = <Expression> ; <Statement> ->
 int a = <Expression> ; <Statement> ->
 int a = <Term> ; <Statement> ->
 int a = <Factor> ; <Statement> ->
 int a = IntLiteral ; <Statement> ->
 int a = 10 ; <Statement> ->
 int a = 10 ; <Assignment> ->
-int a = 10 ; ID = <Expression> ; ->
+int a = 10 ; ID ("b") = <Expression> ; ->
 int a = 10 ; b = <Expression> ; ->
 int a = 10 ; b = <Expression> + <Term> ; ->
 int a = 10 ; b = <Term> + <Term> ; ->
 int a = 10 ; b = <Term> * <Factor> + <Term> ; ->
 int a = 10 ; b = <Factor> * <Factor> + <Term> ; ->
-int a = 10 ; b = ID * <Factor> + <Term> ; ->
+int a = 10 ; b = ID ("a") * <Factor> + <Term> ; ->
 int a = 10 ; b = a * <Factor> + <Tearm> ; ->
 int a = 10 ; b = a * IntLiteral + <Term> ; ->
 int a = 10 ; b = a * 2 + <Term> ; ->
@@ -178,3 +179,39 @@ int a = 10 ; b = a * 2 + 5 ;
             │           └── IntLiteral ("5")
             └── ;
 ```
+
+### Таблица SLR(1)
+**Полный набор правил:**
+```ebnf
+0. S' -> Program
+1. Program -> StatementList
+2. StatementList -> Statement
+3. StatementList -> StatementList Statement
+4. Statement -> Declaration
+5. Statement -> Assignment
+6. Declaration -> "int" ID "=" Expression ";"
+7. Assignment -> ID "=" Expression ";"
+8. Expression -> Expression "+" Term
+9. Expression -> Expression "-" Term
+10. Expression -> Term
+11. Term -> Term "*" Factor
+12. Term -> Term "/" Factor
+13. Term -> Factor
+14. Factor -> IntLiteral
+15. Factor -> ID
+16. Factor -> "(" Expression ")"
+17. Factor -> "-" Factor
+```
+
+**First таблица:**
+|Нетерминал   |FIRST        |
+|:-----------:|:-----------:|
+|S'           |{int, ID}    |
+|Program      |{int, ID}    |
+|StatementList|{int, ID}    |
+|Statement    |{int, ID}    |
+|Declaration  |{int}        |
+|Assignment   |{ID}         |
+|Expression   |{IntLiteral, ID, "(", "-"}|
+|Term         |{IntLiteral, ID, "(", "-"}|
+|Factor       |{IntLiteral, ID, "(", "-"}|
