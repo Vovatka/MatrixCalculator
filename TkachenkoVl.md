@@ -116,6 +116,7 @@ int a = 10;
 b = a * 2 + 5;
 ```
 
+```ebnf
 <Program> ->
 <StatementList> ->
 <StatementList><Statement> ->
@@ -141,6 +142,7 @@ int a = 10 ; b = a * 2 + <Term> ; ->
 int a = 10 ; b = a * 2 + <Factor> ; ->
 int a = 10 ; b = a * 2 + IntLiteral ; ->
 int a = 10 ; b = a * 2 + 5 ;
+```
 
 **Cинтаксическое дерево:**
 ```tree
