@@ -182,17 +182,17 @@ int a = 10 ; b = a * 2 + 5 ;
 
 ### Таблица SLR(1)
 Для упрощения введём следующие обозначения:
-Program - P
-StatementList - L
-Statement - S
-Declaration - D
-Assignment - A
-Expression - E
-Term - T
-Factor - F
-int - i
-ID - "ID"
-IntLiteral - 2
+- Program - P
+- StatementList - L
+- Statement - S
+- Declaration - D
+- Assignment - A
+- Expression - E
+- Term - T
+- Factor - F
+- int - i
+- ID - "ID"
+- IntLiteral - 2
 
 **Набор правил:**
 ```ebnf
