@@ -230,9 +230,6 @@ int a = 10 ; b = a * 2 + 5 ;
 |Term         |{IntLiteral, ID, "(", "-"}|{";","+","-","*","/",")"}|
 |Factor       |{IntLiteral, ID, "(", "-"}|{";","+","-","*","/",")"}|
 
-![StateTree](https://github.com/user-attachments/assets/e2b02798-e4ae-4a1f-8abf-fcd82b797f22)
-![StateTreeContinue](https://github.com/user-attachments/assets/7ea61be1-3b4b-4b10-86f6-f24f05debc47)
-
 **Стартовое сотояние:**
 ```ebnf
 0. S' -> .P
@@ -439,3 +436,6 @@ int a = 10 ; b = a * 2 + 5 ;
 | 0 2                     | $                             | r1                           |
 | 0                       | $                             | goto(0, P) = 1               |
 | 0 1                     | $                             | r0 - accept                  |
+
+![StateTree (на всякий случай)](https://github.com/user-attachments/assets/e2b02798-e4ae-4a1f-8abf-fcd82b797f22)
+![StateTreeContinue](https://github.com/user-attachments/assets/7ea61be1-3b4b-4b10-86f6-f24f05debc47)
