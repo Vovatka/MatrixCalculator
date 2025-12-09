@@ -179,7 +179,7 @@ int a = 10 ; b = a * 2 + 5 ;
             │           └── IntLiteral ("5")
             └── ;
 ```
-![Cинтаксическое дерево](images\Tree.jpg)
+![Tree](https://github.com/user-attachments/assets/6681f9a9-1c7c-4a1f-b52b-674c16343c46)
 
 ### Таблица SLR(1)
 Для упрощения введём следующие обозначения:
@@ -230,8 +230,8 @@ int a = 10 ; b = a * 2 + 5 ;
 |Term         |{IntLiteral, ID, "(", "-"}|{";","+","-","*","/",")"}|
 |Factor       |{IntLiteral, ID, "(", "-"}|{";","+","-","*","/",")"}|
 
-![Дерево состояний](images\StateTree.jpg)
-![Дерево состояний продолжение](images\StateTreeContinue.jpg)
+![StateTree](https://github.com/user-attachments/assets/e2b02798-e4ae-4a1f-8abf-fcd82b797f22)
+![StateTreeContinue](https://github.com/user-attachments/assets/7ea61be1-3b4b-4b10-86f6-f24f05debc47)
 
 **Стартовое сотояние:**
 ```ebnf
