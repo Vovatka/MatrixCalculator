@@ -437,5 +437,6 @@ int a = 10 ; b = a * 2 + 5 ;
 | 0                       | $                             | goto(0, P) = 1               |
 | 0 1                     | $                             | r0 - accept                  |
 
+**optional: дерево состояний в черновом варианте (здесь стартовое состояние I0 записано в полном виде)**
 ![StateTree (на всякий случай)](https://github.com/user-attachments/assets/e2b02798-e4ae-4a1f-8abf-fcd82b797f22)
 ![StateTreeContinue](https://github.com/user-attachments/assets/7ea61be1-3b4b-4b10-86f6-f24f05debc47)
