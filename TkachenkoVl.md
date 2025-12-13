@@ -1,4 +1,4 @@
-<img width="1280" height="767" alt="image" src="https://github.com/user-attachments/assets/861f61a3-2890-4deb-b928-61f274a5d1fe" />***Автор: Ткаченко Владимир КМБО-05-23. Вариант 20-2-1***
+***Автор: Ткаченко Владимир КМБО-05-23. Вариант 20-2-1***
 
 ***лучше смотреть тут: https://github.com/Vovatka/MatrixCalculator/blob/develop/TkachenkoVl.md***
 ## Задание 1
