@@ -308,82 +308,67 @@ int a = 10 ; b = a * 2 + 5 ;
 | 31  |   |   |   |r12|r12|r12| r12| r12|    |     | r12 |     |     |     |     |     |     |     |     |     |     |
 | 32  |   |   |   |r16|r16|r16| r16| r16|    |     | r16 |     |     |     |     |     |     |     |     |     |     |
 
-**Разбор предложения int a = 4; b = (a + 3) * 2;**
+**Разбор предложения `int a = 4; b = (a + 3) * 2;`**
 
-| Стек                    | Вход                          | Действие                     |
-|-------------------------|-------------------------------|------------------------------|
-| 0                       | int a = 4; b = (a + 3) * 2; $ | s6                           |
-| 0 6                     | a = 4; b = (a + 3) * 2; $     | s9                           |
-| 0 6 9                   | = 4; b = (a + 3) * 2; $       | s11                          |
-| 0 6 9 11                | 4; b = (a + 3) * 2; $         | s15                          |
-| 0 6 9 11 15             | ; b = (a + 3) * 2; $          | r14                          |
-| 0 6 9 11                | ; b = (a + 3) * 2; $          | goto(11, F) = 14             |
-| 0 6 9 11 14             | ; b = (a + 3) * 2; $          | r13                          |
-| 0 6 9 11                | ; b = (a + 3) * 2; $          | goto(11, T) = 13             |
-| 0 6 9 11 13             | ; b = (a + 3) * 2; $          | r10                          |
-| 0 6 9 11                | ; b = (a + 3) * 2; $          | goto(11, E) = 19             |
-| 0 6 9 11 19             | ; b = (a + 3) * 2; $          | s27                          |
-| 0 6 9 11 19 27          | b = (a + 3) * 2; $            | r6                           |
-| 0 6 9 11 19             | b = (a + 3) * 2; $            | goto(19, D) = empty          |
-| 0 6 9 11                | b = (a + 3) * 2; $            | goto(11, D) = empty          |
-| 0 6 9                   | b = (a + 3) * 2; $            | goto(9, D) = empty           |
-| 0 6                     | b = (a + 3) * 2; $            | goto(6, D) = empty           |
-| 0                       | b = (a + 3) * 2; $            | goto(0, D) = 4               |
-| 0 4                     | b = (a + 3) * 2; $            | r4                           |
-| 0                       | b = (a + 3) * 2; $            | goto(0, S) = 3               |
-| 0 3                     | b = (a + 3) * 2; $            | r2                           |
-| 0                       | b = (a + 3) * 2; $            | goto(0, L) = 2               |
-| 0 2                     | b = (a + 3) * 2; $            | s7                           |
-| 0 2 7                   | = (a + 3) * 2; $              | s10                          |
-| 0 2 7 10                | (a + 3) * 2; $                | s17                          |
-| 0 2 7 10 17             | a + 3) * 2; $                 | s17                          |
-| 0 2 7 10 17 16          | + 3) * 2; $                   | r15                          |
-| 0 2 7 10 17             | + 3) * 2; $                   | goto(17, F) = 14             |
-| 0 2 7 10 17 14          | + 3) * 2; $                   | r13                          |
-| 0 2 7 10 17             | + 3) * 2; $                   | goto(17, T) = 13             |
-| 0 2 7 10 17 13          | + 3) * 2; $                   | r10                          |
-| 0 2 7 10 17             | + 3) * 2; $                   | goto(17, E) = 25             |
-| 0 2 7 10 17 25          | + 3) * 2; $                   | s21                          |
-| 0 2 7 10 17 25 21       | 3) * 2; $                     | s15                          |
-| 0 2 7 10 17 25 21 15    | ) * 2; $                      | r14                          |
-| 0 2 7 10 17 25 21       | ) * 2; $                      | goto(21, F) = 14             |
-| 0 2 7 10 17 25 21 14    | ) * 2; $                      | r13                          |
-| 0 2 7 10 17 25 21       | ) * 2; $                      | goto(21, T) = 28             |
-| 0 2 7 10 17 25 21 28    | ) * 2; $                      | r8                           |
-| 0 2 7 10 17 25 21       | ) * 2; $                      | goto(21, E) = empty          |
-| 0 2 7 10 17 25          | ) * 2; $                      | goto(25, E) = empty          |
-| 0 2 7 10 17             | ) * 2; $                      | goto(17, E) = 25             |
-| 0 2 7 10 17 25          | ) * 2; $                      | s32                          |
-| 0 2 7 10 17 25 32       | * 2; $                        | r16                          |
-| 0 2 7 10 17 25          | * 2; $                        | goto(25, F) = empty          |
-| 0 2 7 10 17             | * 2; $                        | goto(17, F) = 14             |
-| 0 2 7 10 17 14          | * 2; $                        | r13                          |
-| 0 2 7 10 17             | * 2; $                        | goto(17, T) = 13             |
-| 0 2 7 10 17 13          | * 2; $                        | s23                          |
-| 0 2 7 10 17 13 23       | 2; $                          | s15                          |
-| 0 2 7 10 17 13 23 15    | ; $                           | r14                          |
-| 0 2 7 10 17 13 23       | ; $                           | goto(23, F) = 30             |
-| 0 2 7 10 17 13 23 30    | ; $                           | r11                          |
-| 0 2 7 10 17 13 23       | ; $                           | goto(23, T) = empty          |
-| 0 2 7 10 17 13          | ; $                           | goto(13, T) = empty          |
-| 0 2 7 10 17             | ; $                           | goto(17, T) = empty          |
-| 0 2 7 10                | ; $                           | goto(10, T) = 13             |
-| 0 2 7 10 13             | ; $                           | r10                          |
-| 0 2 7 10                | ; $                           | goto(10, E) = 12             |
-| 0 2 7 10  12            | ; $                           | s20                          |
-| 0 2 7 10 12 20          | $                             | r7                           |
-| 0 2 7 10 12             | $                             | goto(12, A) = empty          |
-| 0 2 7 10                | $                             | goto(10, A) = empty          |
-| 0 2 7                   | $                             | goto(7, A) = empty           |    
-| 0 2                     | $                             | goto(2, A) = 5               |
-| 0 2 5                   | $                             | r5                           |
-| 0 2                     | $                             | goto(2, S) = 8               |
-| 0 2 8                   | $                             | r3                           |
-| 0 2                     | $                             | goto(2, L) = empty           |
-| 0                       | $                             | goto(0, L) = 2               |
-| 0 2                     | $                             | r1                           |
-| 0                       | $                             | goto(0, P) = 1               |
-| 0 1                     | $                             | acc                          |
+| Стек                                   | Вход                          | Действие                     |
+|----------------------------------------|-------------------------------|------------------------------|
+| I₀                                     | int a = 4; b = (a + 3) * 2; $ | s6 (shift int)               |
+| I₀ int I₆                              | a = 4; b = (a + 3) * 2; $     | s9 (shift ID)                |
+| I₀ int I₆ ID I₉                        | = 4; b = (a + 3) * 2; $       | s11 (shift =)                |
+| I₀ int I₆ ID I₉ = I₁₁                  | 4; b = (a + 3) * 2; $         | s15 (shift IntLiteral)       |
+| I₀ int I₆ ID I₉ = I₁₁ IntLiteral I₁₅   | ; b = (a + 3) * 2; $          | r14 (Factor → IntLiteral)    |
+| I₀ int I₆ ID I₉ = I₁₁                  | ; b = (a + 3) * 2; $          | goto Factor → I₁₄            |
+| I₀ int I₆ ID I₉ = I₁₁ Factor I₁₄       | ; b = (a + 3) * 2; $          | r13 (Term → Factor)          |
+| I₀ int I₆ ID I₉ = I₁₁                  | ; b = (a + 3) * 2; $          | goto Term → I₁₃              |
+| I₀ int I₆ ID I₉ = I₁₁ Term I₁₃         | ; b = (a + 3) * 2; $          | r10 (Expression → Term)      |
+| I₀ int I₆ ID I₉ = I₁₁                  | ; b = (a + 3) * 2; $          | goto Expression → I₁₉        |
+| I₀ int I₆ ID I₉ = I₁₁ Expression I₁₉   | ; b = (a + 3) * 2; $          | s27 (shift ;)                |
+| I₀ int I₆ ID I₉ = I₁₁ Expression I₁₉ ; I₂₇ | b = (a + 3) * 2; $        | r6 (Declaration → int ID = Expression ;) |
+| I₀                                     | b = (a + 3) * 2; $            | goto Declaration → I₄        |
+| I₀ Declaration I₄                      | b = (a + 3) * 2; $            | r4 (Statement → Declaration) |
+| I₀                                     | b = (a + 3) * 2; $            | goto Statement → I₃          |
+| I₀ Statement I₃                        | b = (a + 3) * 2; $            | r2 (StatementList → Statement) |
+| I₀                                     | b = (a + 3) * 2; $            | goto StatementList → I₂      |
+| I₀ StatementList I₂                    | b = (a + 3) * 2; $            | s7 (shift ID)                |
+| I₀ StatementList I₂ ID I₇              | = (a + 3) * 2; $              | s10 (shift =)                |
+| I₀ StatementList I₂ ID I₇ = I₁₀        | (a + 3) * 2; $                | s17 (shift ()                |
+| I₀ StatementList I₂ ID I₇ = I₁₀ ( I₁₇  | a + 3) * 2; $                 | s16 (shift ID)               |
+| I₀ StatementList I₂ ID I₇ = I₁₀ ( I₁₇ ID I₁₆ | + 3) * 2; $         | r15 (Factor → ID)            |
+| I₀ StatementList I₂ ID I₇ = I₁₀ ( I₁₇  | + 3) * 2; $                   | goto Factor → I₁₄            |
+| I₀ StatementList I₂ ID I₇ = I₁₀ ( I₁₇ Factor I₁₄ | + 3) * 2; $          | r13 (Term → Factor)          |
+| I₀ StatementList I₂ ID I₇ = I₁₀ ( I₁₇  | + 3) * 2; $                   | goto Term → I₁₃              |
+| I₀ StatementList I₂ ID I₇ = I₁₀ ( I₁₇ Term I₁₃ | + 3) * 2; $           | r10 (Expression → Term)      |
+| I₀ StatementList I₂ ID I₇ = I₁₀ ( I₁₇  | + 3) * 2; $                   | goto Expression → I₂₅        |
+| I₀ StatementList I₂ ID I₇ = I₁₀ ( I₁₇ Expression I₂₅ | + 3) * 2; $   | s21 (shift +)                |
+| I₀ StatementList I₂ ID I₇ = I₁₀ ( I₁₇ Expression I₂₅ + I₂₁ | 3) * 2; $ | s15 (shift IntLiteral) |
+| I₀ StatementList I₂ ID I₇ = I₁₀ ( I₁₇ Expression I₂₅ + I₂₁ IntLiteral I₁₅ | ) * 2; $ | r14 (Factor → IntLiteral) |
+| I₀ StatementList I₂ ID I₇ = I₁₀ ( I₁₇ Expression I₂₅ + I₂₁ | ) * 2; $ | goto Factor → I₁₄ |
+| I₀ StatementList I₂ ID I₇ = I₁₀ ( I₁₇ Expression I₂₅ + I₂₁ Factor I₁₄ | ) * 2; $ | r13 (Term → Factor) |
+| I₀ StatementList I₂ ID I₇ = I₁₀ ( I₁₇ Expression I₂₅ + I₂₁ | ) * 2; $ | goto Term → I₂₈ |
+| I₀ StatementList I₂ ID I₇ = I₁₀ ( I₁₇ Expression I₂₅ + I₂₁ Term I₂₈ | ) * 2; $ | r8 (Expression → Expression + Term) |
+| I₀ StatementList I₂ ID I₇ = I₁₀ ( I₁₇ Expression I₂₅ | ) * 2; $ | s32 (shift )) |
+| I₀ StatementList I₂ ID I₇ = I₁₀ ( I₁₇ Expression I₂₅ ) I₃₂ | * 2; $ | r16 (Factor → ( Expression )) |
+| I₀ StatementList I₂ ID I₇ = I₁₀        | * 2; $                        | goto Factor → I₁₄            |
+| I₀ StatementList I₂ ID I₇ = I₁₀ Factor I₁₄ | * 2; $                 | r13 (Term → Factor)          |
+| I₀ StatementList I₂ ID I₇ = I₁₀        | * 2; $                        | goto Term → I₁₃              |
+| I₀ StatementList I₂ ID I₇ = I₁₀ Term I₁₃ | * 2; $                 | s23 (shift *)                |
+| I₀ StatementList I₂ ID I₇ = I₁₀ Term I₁₃ * I₂₃ | 2; $           | s15 (shift IntLiteral)       |
+| I₀ StatementList I₂ ID I₇ = I₁₀ Term I₁₃ * I₂₃ IntLiteral I₁₅ | ; $ | r14 (Factor → IntLiteral) |
+| I₀ StatementList I₂ ID I₇ = I₁₀ Term I₁₃ * I₂₃ | ; $           | goto Factor → I₃₀            |
+| I₀ StatementList I₂ ID I₇ = I₁₀ Term I₁₃ * I₂₃ Factor I₃₀ | ; $ | r11 (Term → Term * Factor) |
+| I₀ StatementList I₂ ID I₇ = I₁₀        | ; $                           | goto Term → I₁₃              |
+| I₀ StatementList I₂ ID I₇ = I₁₀ Term I₁₃ | ; $                 | r10 (Expression → Term)      |
+| I₀ StatementList I₂ ID I₇ = I₁₀        | ; $                           | goto Expression → I₁₂        |
+| I₀ StatementList I₂ ID I₇ = I₁₀ Expression I₁₂ | ; $                 | s20 (shift ;)                |
+| I₀ StatementList I₂ ID I₇ = I₁₀ Expression I₁₂ ; I₂₀ | $             | r7 (Assignment → ID = Expression ;) |
+| I₀ StatementList I₂                     | $                             | goto Assignment → I₅         |
+| I₀ StatementList I₂ Assignment I₅       | $                             | r5 (Statement → Assignment)  |
+| I₀ StatementList I₂                     | $                             | goto Statement → I₈          |
+| I₀ StatementList I₂ Statement I₈        | $                             | r3 (StatementList → StatementList Statement) |
+| I₀ StatementList I₂                     | $                             | goto StatementList → I₂      |
+| I₀ StatementList I₂                     | $                             | r1 (Program → StatementList) |
+| I₀                                     | $                             | goto Program → I₁            |
+| I₀ Program I₁                          | $                             | acc                    |
 
 **optional: дерево состояний в черновом варианте (здесь стартовое состояние I0 записано в полном виде)**
 ![StateTree (на всякий случай)](https://github.com/user-attachments/assets/e2b02798-e4ae-4a1f-8abf-fcd82b797f22)
