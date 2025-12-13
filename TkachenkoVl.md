@@ -236,21 +236,40 @@ int a = 10 ; b = a * 2 + 5 ;
 7. Assignment -> .ID = Expression ;
 ```
 
-|STATE|     GOTO                                               |                     STATE CONTENT                                   |
-|:---:|:------------------------------------------------------:|:-------------------------------------------------------------------:|
-|I1   |goto(0, Program)                                        |{S' -> Program.}                                                     |
-|I2   |goto(0, StatementList)                                  |{Program -> StatementList.; StatementList -> StatementList.Statement}|
-|I3   |goto(0, Statement)                                      |{StatementList -> Statement.}                                        |
-|I4   |goto(0, Declaration)=goto(2, Declaration)               |{Statement -> Declaration.}                                          |
-|I5   |goto(0, Assignment)=goto(2, Assignment)                 |{Statement -> Assignment.}                                           |
-|I6   |goto(0, int)=goto(2, int)                               |{Declaration -> int. ID = Expression ;}                              |
-|I7   |goto(0, ID)=goto(2, ID)                                 |{Assignment -> ID. = Expression ;}                                   |
-|I8   |goto(2, Statement)                                      |{StatementList -> StatementList Statement.}                          |
-|I9   |goto(6, ID)                                             |{Declaration -> int ID. = Expression ;}                              |
-|I10  |goto(7, =)                                              |{Assignment -> ID =. Expression ;}                                   |
-|I11  |goto(9, =)                                              |{Declaration -> int ID =. Expression ;}                              |
-|I12  |goto(10, Expression)                                    |{Assignment -> ID = Expression.; Expression -> Expression. + Term; 
-                                                                Expression -> Expression. - Term}                                    |
+|STATE| GOTO                                   | STATE CONTENT                                                                                                 |
+|:---:|:--------------------------------------:|:-------------------------------------------------------------------------------------------------------------:|
+| I1  |goto(0, Program)                        |{S' -> Program.}                                                                                               |
+| I2  |goto(0, StatementList)                  |{Program -> StatementList.;<br>StatementList -> StatementList.Statement}                                       |
+| I3  |goto(0, Statement)                      |{StatementList -> Statement.}                                                                                  | 
+| I4  |goto(0/2, Declaration)                  |{Statement -> Declaration.}                                                                                    |
+| I5  |goto(0/2, Assignment)                   |{Statement -> Assignment.}                                                                                     |
+| I6  |goto(0/2, int)                          |{Declaration -> int. ID = Expression ;}                                                                        |
+| I7  |goto(0/2, ID)                           |{Assignment -> ID. = Expression ;}                                                                             |
+| I8  |goto(2, Statement)                      |{StatementList -> StatementList Statement.}                                                                    |
+| I9  |goto(6, ID)                             |{Declaration -> int ID. = Expression ;}                                                                        |
+| I10 |goto(7, =)                              |{Assignment -> ID =. Expression ;}                                                                             |
+| I11 |goto(9, =)                              |{Declaration -> int ID =. Expression ;}                                                                        |
+| I12 |goto(10, Expression)                    |{Assignment -> ID = Expression.;<br>Expression -> Expression. + Term;<br>Expression -> Expression. - Term}     |
+| I13 |goto(10/11/17/21/22, Term)              |{Expression -> Term.;<br>Term -> Term. * Factor;<br>Term -> Term. / Factor}                                    |
+| I14 |goto(10/11/17/21/22, Factor)            |{Term -> Factor.}                                                                                              |
+| I15 |goto(10/11/17/21/22/23/24, IntLiteral)  |{Factor -> IntLiteral.}                                                                                        |
+| I16 |goto(10/11/17/21/22/23/24, ID)          |{Factor -> ID.}                                                                                                |
+| I17 |goto(10/11/18/23/24, "(")               |{Factor -> (. Expression )}                                                                                    |
+| I18 |goto(10/11/17/21/22/23/24, -)           |{Factor -> -. Factor}                                                                                          |
+| I19 |goto(11, Expression)                    |{Declaration -> int ID = Expression.;<br>Expression -> Expression. + Term;<br>Expression -> Expression. - Term}|
+| I20 |goto(12, ";")                           |{Assignment -> ID = Expression ;.}                                                                             |
+| I21 |goto(12, +)                             |{Expression -> Expression +. Term}                                                                             |
+| I22 |goto(12, -)                             |{Expression -> Expression -. Term}                                                                             |
+| I23 |goto(13, \*)                            |{Term -> Term *. Factor}                                                                                       |
+| I24 |goto(13, /)                             |{Term -> Term /. Factor}                                                                                       |
+| I25 |goto(17, Expression)                    |{Factor -> ( Expression.) ;<br>Expression -> Expression. + Term;<br>Expression -> Expression. - Term}          |
+| I26 |goto(18, Factor)                        |{Factor -> - Factor.}                                                                                          |
+| I27 |goto(19, ";")                           |{Declaration -> int ID = Expression ;.}                                                                        |
+| I28 |goto(21, Term)                          |{Expression -> Expression + Term.;<br>Term -> Term. * Factor;<br>Term -> Term. / Factor}                       |
+| I29 |goto(22, Term)                          |{Expression -> Expression - Term.;<br>Term -> Term. * Factor;<br>Term -> Term. / Factor}                       |
+| I30 |goto(23, Factor)                        |{Term -> Term * Factor.}                                                                                       |
+| I31 |goto(24, Factor)                        |{Term -> Term / Factor.}                                                                                       |
+| I32 |goto(25, ")")                           |{Factor -> ( Expression ).}                                                                                    |
 
 | State | i  | "ID" | =  | ";" | +  | -  | *  | /  | 2  | "(" | ")" | $   | S'  | P   | L   | S   | D   | A   | E   | T   | F   |
 |:-----:|:--:|:----:|:--:|:---:|:--:|:--:|:--:|:--:|:--:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
