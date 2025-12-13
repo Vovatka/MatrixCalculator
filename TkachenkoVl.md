@@ -110,6 +110,8 @@
     Левая рекурсия невозможна в регулярных грамматиках, т.к. она требует стека, и следовательно,
     не может описана конечным автоматом.
 
+## Задание 3
+
 ### Cинтаксическое дерево и вывод произвольного предложения
 Возьмём в качестве примера следующее предложение:
 ```
@@ -146,7 +148,6 @@ int a = 10 ; b = a * 2 + IntLiteral ; ->
 int a = 10 ; b = a * 2 + 5 ;
 ```
 
-## Задание 3
 **Cинтаксическое дерево:**
 ```tree
 <Program>
@@ -187,39 +188,27 @@ int a = 10 ; b = a * 2 + 5 ;
 ## Задание 4
 
 ### Таблица SLR(1)
-Для упрощения введём следующие обозначения:
-- Program - P
-- StatementList - L
-- Statement - S
-- Declaration - D
-- Assignment - A
-- Expression - E
-- Term - T
-- Factor - F
-- int - i
-- ID - "ID"
-- IntLiteral - 2
 
 **Набор правил:**
 ```ebnf
-0. S' -> .P
-1. P -> .L
-2. L -> .S
-3. L -> .L S
-4. S -> .D
-5. S -> .A
-6. D -> .i "ID" = E ;
-7. A -> ."ID" = E ;
-8. E -> .E + T
-9. E -> .E - T
-10. E -> .T
-11. T -> .T * F
-12. T -> .T / F
-13. T -> .F
-14. F -> .2
-15. F -> ."ID"
-16. F -> .( E )
-17. F -> .- F
+0. S' -> .Program
+1. Program -> .StatementList
+2. StatementList -> .Statement
+3. StatementList -> .StatementList Statement
+4. Statement -> .Declaration
+5. Statement -> .Assignment
+6. Declaration -> .int ID = Expression ;
+7. Assignment -> .ID = Expression ;
+8. Expression -> .Expression + Term
+9. Expression -> .Expression - Term
+10. Expression -> .Term
+11. Term -> .Term * Factor
+12. Term -> .Term / Factor
+13. Term -> .Factor
+14. Factor -> .IntLiteral
+15. Factor -> .ID
+16. Factor -> .( Expression )
+17. Factor -> .- Factor
 ```
 
 
@@ -227,106 +216,41 @@ int a = 10 ; b = a * 2 + 5 ;
 |:-----------:|:------------------------:|:-----------------------:|
 |S'           |{int, ID}                 |{$}                      |
 |Program      |{int, ID}                 |{$}                      |
-|StatementList|{int, ID}                 |{$,"int",ID}             | 
-|Statement    |{int, ID}                 |{$,"int",ID}             |
-|Declaration  |{int}                     |{$,"int",ID}             | 
-|Assignment   |{ID}                      |{$,"int",ID}             |
+|StatementList|{int, ID}                 |{$,int,ID}               | 
+|Statement    |{int, ID}                 |{$,int,ID}               |
+|Declaration  |{int}                     |{$,int,ID}               | 
+|Assignment   |{ID}                      |{$,int,ID}               |
 |Expression   |{IntLiteral, ID, "(", "-"}|{";","+","-",")"}        |
 |Term         |{IntLiteral, ID, "(", "-"}|{";","+","-","*","/",")"}|
 |Factor       |{IntLiteral, ID, "(", "-"}|{";","+","-","*","/",")"}|
 
 **Стартовое сотояние:**
 ```ebnf
-0. S' -> .P
-1. P -> .L
-2. L -> .S
-3. L -> .L S
-4. S -> .D
-5. S -> .A
-6. D -> .i "ID" = E ;
-7. A -> ."ID" = E ;
+0. S' -> .Program
+1. Program -> .StatementList
+2. StatementList -> .Statement
+3. StatementList -> .StatementList Statement
+4. Statement -> .Declaration
+5. Statement -> .Assignment
+6. Declaration -> .int ID = Expression ;
+7. Assignment -> .ID = Expression ;
 ```
 
-|     GOTO      |                     STATE CONTENT                      | STATE INDEX |
-|:-------------:|:------------------------------------------------------:|:-----------:|
-|  goto(0, P)   |                    {S' -> P.}                          |      1      |
-|  goto(0, L)   |            {P -> L.; L -> L.S}                         |      2      |
-|  goto(0, S)   |                    {L -> S.}                           |      3      |
-|  goto(0, D)   |                    {S -> D.}                           |      4      |
-|  goto(0, A)   |                    {S -> A.}                           |      5      |
-|  goto(0, i)   |            {D -> i."ID" = E ";"}                       |      6      |
-| goto(0, "ID") |            {A -> "ID".= E ";"}                         |      7      |
-|  goto(2, S)   |                   {L -> L S.}                          |      8      |
-|  goto(2, D)   |                    {S -> D.}                           |      4      |
-|  goto(2, A)   |                    {S -> A.}                           |      5      |
-|  goto(2, i)   |            {D -> i."ID" = E ";"}                       |      6      |
-| goto(2, "ID") |            {A -> "ID".= E ";"}                         |      7      |
-| goto(6, "ID") |           {D -> i "ID".= E ";"}                        |      9      |
-|  goto(7, =)   |           {A -> "ID" =.E ";"}                          |     10      |
-|  goto(9, =)   |           {D -> i "ID" =.E ";"}                        |     11      |
-|  goto(10, E)  |   {A -> "ID" = E.";"; E -> E.+ T; E -> E.- T}          |     12      |
-|  goto(10, T)  |      {E -> T.; T -> T.* F; T -> T./ F}                 |     13      |
-|  goto(10, F)  |                    {T -> F.}                           |     14      |
-|  goto(10, 2)  |                    {F -> 2.}                           |     15      |
-| goto(10, "ID")|                   {F -> "ID".}                         |     16      |
-|  goto(10, "(")|               {F -> "(".E ")"}                         |     17      |
-|  goto(10, -)  |                   {F -> -.F}                           |     18      |
-|  goto(11, E)  |   {D -> i "ID" = E.";"; E -> E.+ T; E -> E.- T}        |     19      |
-|  goto(11, T)  |      {E -> T.; T -> T.* F; T -> T./ F}                 |     13      |
-|  goto(11, F)  |                    {T -> F.}                           |     14      |
-|  goto(11, 2)  |                    {F -> 2.}                           |     15      |
-| goto(11, "ID")|                   {F -> "ID".}                         |     16      |
-|  goto(11, "(")|               {F -> "(".E ")"}                         |     17      |
-|  goto(11, -)  |                   {F -> -.F}                           |     18      |
-|  goto(12, ";")|               {A -> "ID" = E ";".}                     |     20      |
-|  goto(12, +)  |                  {E -> E +.T}                          |     21      |
-|  goto(12, -)  |                  {E -> E -.T}                          |     22      |
-|  goto(13, \*)  |                  {T -> T *.F}                         |     23      |
-|  goto(13, /)  |                  {T -> T /.F}                          |     24      |
-|  goto(17, E)  |     {F -> "(" E.")"; E -> E.+ T; E -> E.- T}           |     25      |
-|  goto(17, T)  |      {E -> T.; T -> T.* F; T -> T./ F}                 |     13      |
-|  goto(17, F)  |                    {T -> F.}                           |     14      |
-|  goto(17, 2)  |                    {F -> 2.}                           |     15      |
-| goto(17, "ID")|                   {F -> "ID".}                         |     16      |
-|  goto(17, "(")|               {F -> "(".E ")"}                         |     17      |
-|  goto(17, -)  |                   {F -> -.F}                           |     18      |
-|  goto(18, F)  |                   {F -> - F.}                          |     26      |
-|  goto(18, 2)  |                    {F -> 2.}                           |     15      |
-| goto(18, "ID")|                   {F -> "ID".}                         |     16      |
-|  goto(18, "(")|               {F -> "(".E ")"}                         |     17      |
-|  goto(18, -)  |                   {F -> -.F}                           |     18      |
-|  goto(19, ";")|             {D -> i "ID" = E ";".}                     |     27      |
-|  goto(19, +)  |                  {E -> E +.T}                          |     21      |
-|  goto(19, -)  |                  {E -> E -.T}                          |     22      |
-|  goto(21, T)  |      {E -> E + T.; T -> T.* F; T -> T./ F}             |     28      |
-|  goto(21, F)  |                    {T -> F.}                           |     14      |
-|  goto(21, 2)  |                    {F -> 2.}                           |     15      |
-| goto(21, "ID")|                   {F -> "ID".}                         |     16      |
-|  goto(21, "(")|               {F -> "(".E ")"}                         |     17      |
-|  goto(21, -)  |                   {F -> -.F}                           |     18      |
-|  goto(22, T)  |      {E -> E - T.; T -> T.* F; T -> T./ F}             |     29      |
-|  goto(22, F)  |                    {T -> F.}                           |     14      |
-|  goto(22, 2)  |                    {F -> 2.}                           |     15      |
-| goto(22, "ID")|                   {F -> "ID".}                         |     16      |
-|  goto(22, "(")|               {F -> "(".E ")"}                         |     17      |
-|  goto(22, -)  |                   {F -> -.F}                           |     18      |
-|  goto(23, F)  |                   {T -> T * F.}                        |     30      |
-|  goto(23, 2)  |                    {F -> 2.}                           |     15      |
-| goto(23, "ID")|                   {F -> "ID".}                         |     16      |
-|  goto(23, "(")|               {F -> "(".E ")"}                         |     17      |
-|  goto(23, -)  |                   {F -> -.F}                           |     18      |
-|  goto(24, F)  |                   {T -> T / F.}                        |     31      |
-|  goto(24, 2)  |                    {F -> 2.}                           |     15      |
-| goto(24, "ID")|                   {F -> "ID".}                         |     16      |
-|  goto(24, "(")|               {F -> "(".E ")"}                         |     17      |
-|  goto(24, -)  |                   {F -> -.F}                           |     18      |
-|  goto(25, ")")|                {F -> "(" E ")".}                       |     32      |
-|  goto(25, +)  |                  {E -> E +.T}                          |     21      |
-|  goto(25, -)  |                  {E -> E -.T}                          |     22      |
-|  goto(28, \*)  |                  {T -> T *.F}                         |     23      |
-|  goto(28, /)  |                  {T -> T /.F}                          |     24      |
-|  goto(29, \*)  |                  {T -> T *.F}                         |     23      |
-|  goto(29, /)  |                  {T -> T /.F}                          |     24      |
+|STATE|     GOTO                                               |                     STATE CONTENT                                   |
+|:---:|:------------------------------------------------------:|:-------------------------------------------------------------------:|
+|I1   |goto(0, Program)                                        |{S' -> Program.}                                                     |
+|I2   |goto(0, StatementList)                                  |{Program -> StatementList.; StatementList -> StatementList.Statement}|
+|I3   |goto(0, Statement)                                      |{StatementList -> Statement.}                                        |
+|I4   |goto(0, Declaration)=goto(2, Declaration)               |{Statement -> Declaration.}                                          |
+|I5   |goto(0, Assignment)=goto(2, Assignment)                 |{Statement -> Assignment.}                                           |
+|I6   |goto(0, int)=goto(2, int)                               |{Declaration -> int. ID = Expression ;}                              |
+|I7   |goto(0, ID)=goto(2, ID)                                 |{Assignment -> ID. = Expression ;}                                   |
+|I8   |goto(2, Statement)                                      |{StatementList -> StatementList Statement.}                          |
+|I9   |goto(6, ID)                                             |{Declaration -> int ID. = Expression ;}                              |
+|I10  |goto(7, =)                                              |{Assignment -> ID =. Expression ;}                                   |
+|I11  |goto(9, =)                                              |{Declaration -> int ID =. Expression ;}                              |
+|I12  |goto(10, Expression)                                    |{Assignment -> ID = Expression.; Expression -> Expression. + Term; 
+                                                                Expression -> Expression. - Term}                                    |
 
 | State | i  | "ID" | =  | ";" | +  | -  | *  | /  | 2  | "(" | ")" | $   | S'  | P   | L   | S   | D   | A   | E   | T   | F   |
 |:-----:|:--:|:----:|:--:|:---:|:--:|:--:|:--:|:--:|:--:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
