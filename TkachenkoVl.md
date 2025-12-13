@@ -91,7 +91,7 @@
     result = start / 2;
     ```
 
-## Задание 2 - 4
+## Задание 2
 
 ### Класс и однозначность языка и грамматики
 Поскольку в левой части продукции всегда стоит один нетерминал, а в правой – любое
@@ -146,6 +146,7 @@ int a = 10 ; b = a * 2 + IntLiteral ; ->
 int a = 10 ; b = a * 2 + 5 ;
 ```
 
+## Задание 3
 **Cинтаксическое дерево:**
 ```tree
 <Program>
@@ -154,12 +155,12 @@ int a = 10 ; b = a * 2 + 5 ;
     │   └── <Statement>
     │       └── <Declaration>
     │           ├── int
-    │           ├── ID ("a")
+    │           ├── ID
     │           ├── =
     │           ├── <Expression>
     │           │   └── <Term>
     │           │       └── <Factor>
-    │           │           └── IntLiteral ("10")
+    │           │           └── IntLiteral
     │           └── ;
     └── <Statement>
         └── <Assignment>
@@ -170,14 +171,14 @@ int a = 10 ; b = a * 2 + 5 ;
             │   │   └── <Term>
             │   │       ├── <Term>
             │   │       │   └── <Factor>
-            │   │       │       └── ID ("a")
+            │   │       │       └── ID
             │   │       ├── *
             │   │       └── <Factor>
-            │   │           └── IntLiteral ("2")
+            │   │           └── IntLiteral
             │   ├── +
             │   └── <Term>
             │       └── <Factor>
-            │           └── IntLiteral ("5")
+            │           └── IntLiteral
             └── ;
 ```
 ![Tree](https://github.com/user-attachments/assets/6681f9a9-1c7c-4a1f-b52b-674c16343c46)
