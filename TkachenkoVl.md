@@ -1,4 +1,4 @@
-***Автор: Ткаченко Владимир КМБО-05-23. Вариант 20-2-1***
+<img width="1280" height="767" alt="image" src="https://github.com/user-attachments/assets/861f61a3-2890-4deb-b928-61f274a5d1fe" />***Автор: Ткаченко Владимир КМБО-05-23. Вариант 20-2-1***
 
 ***лучше смотреть тут: https://github.com/Vovatka/MatrixCalculator/blob/develop/TkachenkoVl.md***
 ## Задание 1
@@ -181,7 +181,10 @@ int a = 10 ; b = a * 2 + 5 ;
             │           └── IntLiteral
             └── ;
 ```
-![Tree](https://github.com/user-attachments/assets/6681f9a9-1c7c-4a1f-b52b-674c16343c46)
+
+![5328239842653047882](https://github.com/user-attachments/assets/8aff5297-5797-40e1-b168-675086c63374)
+
+## Задание 4
 
 ### Таблица SLR(1)
 Для упрощения введём следующие обозначения:
